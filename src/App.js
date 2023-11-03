@@ -1,71 +1,75 @@
-
-import * as React from 'react';
+import * as React from "react";
+import { useState } from "react";
 
 function Board() {
-  const squares = Array(9).fill(null);
-  function selectSquare(square) {
+  const [squares, setSquares] = useState(Array(9).fill(null));
+  const [xIsNext, setXIsNext] = useState(true);
 
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Pemenang: " + winner;
+  } else {
+    status = "Pemain selanjutnya: " + (xIsNext ? "X" : "O");
+  }
+
+  function selectSquare(square) {
+    if (squares[square] || calculateWinner(squares)) {
+      return;
+    }
+    const newSquares = [...squares];
+    if (xIsNext) {
+      newSquares[square] = "X";
+    } else {
+      newSquares[square] = "O";
+    }
+    setSquares(newSquares);
+    setXIsNext(!xIsNext);
   }
 
   function restart() {
+    setSquares(Array(9).fill(null))
   }
 
   function renderSquare(i) {
     return (
-      <button className="square" onClick={() => selectSquare(i)}>
+      <button
+        className="square w-40 h-40 cursor-pointer text-[100px]"
+        onClick={() => selectSquare(i)}
+      >
         {squares[i]}
       </button>
     );
   }
 
   return (
-    <div>
-      <div >STATUS</div>
-      <div >
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      <div className="text-[40px]">STATUS {status}</div>
+      <div className="grid grid-cols-3 gap-0">
+        <div className="border-4 border-t-0 border-l-0 ">{renderSquare(0)}</div>
+        <div className="border-4 border-t-0">{renderSquare(1)}</div>
+        <div className="border-4 border-t-0 border-r-0">{renderSquare(2)}</div>
+        <div className="border-4 border-l-0">{renderSquare(3)}</div>
+        <div className="border-4">{renderSquare(4)}</div>
+        <div className="border-4 border-r-0">{renderSquare(5)}</div>
+        <div className="border-4 border-b-0 border-l-0">{renderSquare(6)}</div>
+        <div className="border-4 border-b-0">{renderSquare(7)}</div>
+        <div className="border-4 border-b-0 border-r-0">{renderSquare(8)}</div>
       </div>
-      <div >
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
-      </div>
-      <div >
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
-      </div>
-      <button onClick={restart}>
-        restart
-      </button>
+      <button className="text-[30px]" onClick={restart}>restart</button>
     </div>
   );
 }
 
 function Game() {
   return (
-    <div >
-      <div >
-        <Board />
-      </div>
+    <div>
+      <Board />
     </div>
   );
 }
 
-// eslint-disable-next-line no-unused-vars
-function calculateStatus(winner, squares, nextValue) {
-  return winner
-    ? `Winner: ${winner}`
-    : squares.every(Boolean)
-      ? `Scratch: Cat's game`
-      : `Next player: ${nextValue}`;
-}
 
-// eslint-disable-next-line no-unused-vars
-function calculateNextValue(squares) {
-  return squares.filter(Boolean).length % 2 === 0 ? 'X' : 'O';
-}
 
 // eslint-disable-next-line no-unused-vars
 function calculateWinner(squares) {
