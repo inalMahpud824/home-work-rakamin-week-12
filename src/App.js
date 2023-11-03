@@ -9,6 +9,8 @@ function Board() {
   let status;
   if (winner) {
     status = "Pemenang: " + winner;
+  } else if(winner === 'Seri'){
+    status = "Pemenang: " + winner;
   } else {
     status = "Pemain selanjutnya: " + (xIsNext ? "X" : "O");
   }
@@ -70,7 +72,6 @@ function Game() {
 }
 
 
-
 // eslint-disable-next-line no-unused-vars
 function calculateWinner(squares) {
   const lines = [
@@ -87,6 +88,9 @@ function calculateWinner(squares) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
+    }
+    if (squares.every((square) => square)) {
+      return "Seri";
     }
   }
   return null;
